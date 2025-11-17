@@ -1,9 +1,12 @@
 const BALL_SPEED = 5;
 const BROJ_CIGLI = 50;
+
+// funkcija za odabir smjera na početku
 function getStartingDirection() {
   return Math.random() < 0.5 ? 1 : -1;
 }
 
+// učitavanje najboljeg rezultata iz localStoragea
 let highScore = 0;
 function loadBestScore() {
   const saved = localStorage.getItem("bestScore");
@@ -16,6 +19,7 @@ function saveBestScore(currentScore) {
   }
 }
 
+// detekcija sudara između loptice i drugog objekta(palica ili cigla) 
 function bounceFromRect(ball, rect) {
   const dx = ball.x - rect.x;
   const px = (ball.width / 2 + rect.width / 2) - Math.abs(dx);
@@ -37,6 +41,8 @@ function bounceFromRect(ball, rect) {
   return true;
 }
 
+/* klasa za glavni objekt u igri, update() ju crta na temelju newPos() izračuna
+  newPos računa promjenu u 3 scenarija: sudar sa zidom, palicom i ciglom */
 class Loptica {
   constructor(width, height, x, y, ctx, myGameHitterPiece, myGameArea) {
     this.width = width;
@@ -81,6 +87,7 @@ class Loptica {
   } 
 }
 
+// klasa za korisničku palicu, update() ju crta na temelju newPos() izračuna, kretanje <- -> strelicama 
 class Palica {
   constructor(width, height, x, y, ctx) {
     this.width = width;
@@ -111,6 +118,7 @@ class Palica {
   }
 }
 
+// klasa za individualne cigle, update() ju crta ako nije pogođena(this.hit)
 class Cigla {
   constructor(width, height, x, y, ctx, color) {
     this.width = width;
@@ -133,6 +141,8 @@ class Cigla {
   }
 }
 
+/* klasa koja pohranjuje sve cigle i operacije nad njima,
+  fillCigle() radi početnu ispunu, updateCigle poziva update() nad kolekcijom */
 class CiglaArea {
   constructor(ctx) {
     this.context = ctx;
@@ -172,13 +182,16 @@ class CiglaArea {
   }
 }
 
+/* klasa za upravljanje generalnim područjem igre, prima context glavnog canvasa
+  start() zapocinje igru, stop() ju zaustavlja prilikom gubitka,
+  won() prilikom pobjede, clear() pomoćna funkcija za brisanje canvasa */
 class MyGameArea {
   constructor(ctx) {
     this.context = ctx;
   }
   start() {
     this.frameNo = 0;
-    this.interval = setInterval(updateGameArea, 15);
+    this.interval = setInterval(updateGameArea, 20);
   }
   stop() {
     clearInterval(this.interval);
@@ -199,6 +212,7 @@ class MyGameArea {
   }
 }
 
+// ova se funkcija izvodi u intervalima (start() u MyGameArea), poziva ispis ostalih objekata
 function updateGameArea() {
   myGameArea.clear();
   myGamePiece.newPos();
@@ -213,6 +227,7 @@ function updateGameArea() {
   }
 }
 
+// pomoćne funkcije za ispis teksta
 function writeTitle() {
   ctx.font = "bold 36px Helvetica";
   ctx.fillStyle  = "white";
@@ -258,6 +273,7 @@ function writeHighScore() {
   ctx.fillText(`Maksimalan broj bodova: ${highScore}`, 900, 20);
 } 
 
+// ostatak inicijalizacije
 var c = document.getElementById("myCanvas");
 var ctx = c.getContext("2d");
 let gameStarted = false;
@@ -269,6 +285,8 @@ var ciglaArea;
 loadBestScore();
 writeTitle();
 
+/* event listeneri za tipke: Space za početak igre,
+  Escape za izlaz iz igre, <- i -> za pomicanje palicom */
 document.addEventListener("keydown", function(event) {
   if (event.code === "Space" && !gameStarted) {
     gameStarted = true;
