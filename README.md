@@ -1,0 +1,2 @@
+- Izvorni kod je u /src, kod za lokalno testiranje je u /localsrc
+- Za lokalno pokretanje node servera potrebno je: npm install, npm run build, npm start (iz root direktorija)
