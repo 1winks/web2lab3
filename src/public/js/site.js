@@ -4,6 +4,18 @@ function getStartingDirection() {
   return Math.random() < 0.5 ? 1 : -1;
 }
 
+let highScore = 0;
+function loadBestScore() {
+  const saved = localStorage.getItem("bestScore");
+  highScore = saved ? Number(saved) : 0;
+}
+function saveBestScore(currentScore) {
+  if (currentScore > highScore) {
+    highScore = currentScore;
+    localStorage.setItem("bestScore", highScore);
+  }
+}
+
 function bounceFromRect(ball, rect) {
   const dx = ball.x - rect.x;
   const px = (ball.width / 2 + rect.width / 2) - Math.abs(dx);
@@ -61,6 +73,7 @@ class Loptica {
       if (!brick.hit && bounceFromRect(this, brick)) {
         brick.hit = true;
         gameScore++;
+        saveBestScore(gameScore);
       }
     }
     this.x += this.speed_x * this.speedMultiplier;
@@ -249,13 +262,13 @@ var c = document.getElementById("myCanvas");
 var ctx = c.getContext("2d");
 let gameStarted = false;
 let gameScore = 0;
-let highScore = 0;
 var myGamePiece;
 var myGameHitterPiece;
 var myGameArea;
 var ciglaArea;
-
+loadBestScore();
 writeTitle();
+
 document.addEventListener("keydown", function(event) {
   if (event.code === "Space" && !gameStarted) {
     gameStarted = true;
