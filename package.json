@@ -1,0 +1,31 @@
+{
+  "scripts": {
+    "build": "npm run clean && tsc && npm run copy-views && npm run copy-public",
+    "clean": "shx rm -rf dist",
+    "copy-views": "shx cp -r src/views/ dist",
+    "copy-public": "shx cp -r src/public/ dist/public",
+    "start": "node dist/webapp.js"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "dotenv": "^10.0.0",
+    "ejs": "^3.1.10",
+    "express": "^4.21.2",
+    "express-oauth2-jwt-bearer": "^1.7.1",
+    "express-openid-connect": "^2.5.0",
+    "express-session": "^1.18.2",
+    "fs": "0.0.1-security",
+    "https": "^1.0.0",
+    "pg": "^8.16.3",
+    "pug": "^3.0.2",
+    "uuid": "^13.0.0"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
+    "@types/express": "^4.17.14",
+    "@types/express-session": "^1.18.2",
+    "@types/node": "^20.8.6",
+    "@types/pg": "^8.15.5",
+    "shx": "^0.3.4"
+  }
+}
